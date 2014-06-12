@@ -1,6 +1,8 @@
 class BucketsController < ApplicationController
+  skip_before_filter :verify_authenticity_token
+
   def create
-    @bucket = Bucket.create(params[:bucket])
+    BucketWorker.perform_async(params[:bucket])
 
     respond_to do |format|
       format.json { render json: "" }

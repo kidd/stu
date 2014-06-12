@@ -28,6 +28,11 @@ gem 'spring',        group: :development
 
 gem 'sidekiq'
 
+group :development do
+  gem 'pry'
+  gem 'pry-debugger'
+end
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

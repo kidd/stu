@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class BucketTest < ActiveSupport::TestCase
+class ScrobbleTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

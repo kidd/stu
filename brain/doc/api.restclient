@@ -1,0 +1,27 @@
+#  -*- mode: restclient; -*-
+
+POST http://localhost:3000/buckets
+Content-Type: application/json
+
+{
+  "bucket": {
+    "user": "Toni",
+    "lon": "2.1794675",
+    "lat": "41.389588",
+    "timestamp": "201406121300",
+    "tracks": [
+      {
+        "name": "Let The World Hurry By",
+	"mbid": "e78f674c-2d9b-4a43-9a21-e06297885cc7"
+      },
+      {
+        "name": "Hot Like Dimes",
+	"mbid": "a865d5a5-e2ab-4d47-855f-9ed6a3018164"
+      },
+      {
+      	"name": "High School Art Class",
+	"mbid": "84f2cb10-e1b1-4479-b904-cb501e7cd611"
+      }
+    ]
+  }
+}
