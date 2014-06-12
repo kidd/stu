@@ -1,0 +1,5 @@
+class Cruncher
+  def process
+    File.open("public/uploads/")
+  end
+end
