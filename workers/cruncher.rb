@@ -1,5 +1,6 @@
 require 'nokogiri'
 require 'active_support/core_ext/hash/conversions'
+require 'time'
 
 class Cruncher
 
@@ -14,6 +15,9 @@ class Cruncher
     xml = IO.read(file)
     hash = Hash.from_xml(Nokogiri.XML(xml).to_s)
     datapoints = fetch_datapoints(hash)
+    datapoints.each do |dp|
+      dp[0] = DateTime.iso8601(dp[0]).to_time.utc.to_i
+    end
   end
 
 
