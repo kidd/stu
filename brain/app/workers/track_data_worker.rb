@@ -8,9 +8,9 @@ class TrackDataWorker
     params = {
       inc: "releases artist-credits tags"
     }
-    uri.query = URI.encode_www_form(params)
-    res       = Net::HTTP.get_response(uri)
-    info      = Hash.from_xml(res.body)["metadata"]
+    # uri.query = URI.encode_www_form(params)
+    # res       = Net::HTTP.get_response(uri)
+    # info      = Hash.from_xml(res.body)["metadata"]
 
     # length = info["recording"]["length"]
     # artist = info["recording"]["artist_credit"]["name"]
