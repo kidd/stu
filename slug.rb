@@ -69,10 +69,16 @@ post '/upload' do
 
   response = mix_n_match(lastfm_user, datapoints, scrobbles)
 
-  uri    = URI("http://localhost:3000/buckets ")
+  uri     = URI.parse("http://localhost:3000/buckets")
+  header  = { 'Content-Type' => 'application/json' }
+  http    = Net::HTTP.new(uri.host, uri.port)
+
+
   response.each do |k, v|
     v['timestamp'] = k
-    response = Net::HTTP.post_form(uri, {'bucket' =>  v.to_json} )
+    request = Net::HTTP::Post.new(uri.request_uri, header)
+    request.body   = { bucket: v }.to_json
+    http.request(request)
   end
 
   "DONE!"
