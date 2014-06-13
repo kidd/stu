@@ -4,7 +4,7 @@ class BucketWorker
 
   def perform(bucket)
     user      = bucket["user"]
-    timestamp = bucket["timestamp"]
+    timestamp = Time.at(bucket["timestamp"].to_i)
     lat       = bucket["lat"]
     lon       = bucket["lon"]
 

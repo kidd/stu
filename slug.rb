@@ -13,33 +13,37 @@ include FileUtils::Verbose
 # datapoint [timestamp, [lat,long]]
 # scrobble [timestamp, {song}, artist, mbid]
 helpers do
-  def mix_n_match(user_name, datapoints, scrobbles)
 
-    current_datapoint = 0
-    scrobbles.map do |sc|
-      datapoints.inject({}) do |acc, x|
-        if sc.first.to_i >= x.first.to_i
-          unless acc[x.first.to_i]
-            acc[x.first.to_i] = {
-              lon: x[1][0],
-              lat: x[1][1],
-              user: user_name,
-              tracks: [
-                {
-                  name: sc[2],
-                  mbid: sc[3],
-                }
-              ]
-            }
-            break acc
-          else
-            acc[x.first.to_i][:tracks] << { name: sc[2], mbid: sc[3] }  # sc[1] is name, sc[0][1] is artist mbid. change to songmbid
-            break acc
-          end
+  def mix_n_match(user_name, datapoints, scrobbles)
+    buckets = {}
+
+    scrobbles.each do |sc|
+      old_index = 0
+      datapoint = 0
+
+      datapoints.each_with_index do |e, index|
+        if sc.first.to_i < e.first.to_i
+          datapoint = datapoints[index]
+          break
+        else
+          old_index = index
         end
-        acc
       end
+
+      timestamp = datapoint.first.to_i
+
+      buckets[timestamp] ||= {
+        lon: datapoint[1][0],
+        lat: datapoint[1][1],
+        user: user_name,
+        tracks: [
+
+        ]
+      }
+      buckets[timestamp][:tracks] << {name: sc[2],  mbid: sc[3]}
     end
+
+    buckets
   end
 end
 
@@ -63,7 +67,7 @@ post '/upload' do
     scrobbles = Lastfm.scrobble(lastfm_user, from_date, to_date)
   end
 
-  response = mix_n_match(lastfm_user, datapoints, scrobbles).first
+  response = mix_n_match(lastfm_user, datapoints, scrobbles)
 
   uri    = URI("http://localhost:3000/buckets ")
   response.each do |k, v|
