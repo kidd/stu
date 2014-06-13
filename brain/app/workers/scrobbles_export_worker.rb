@@ -11,13 +11,14 @@ class ScrobblesExportWorker
 
     scrobbles.each do |scrobble_id|
       scrobble = Scrobble.find(scrobble_id)
-      columns  = ["userr", "track", "lon", "lat", "scrobbled_at"]
+      columns  = ["userr", "track", "lon", "lat", "genre", "scrobbled_at"]
       values   = [
         "'#{scrobble.user}'",
         "'#{scrobble.track.name}'",
         scrobble.lon,
         scrobble.lat,
-        scrobble.scrobbled_at,
+        "'#{scrobble.track.genre}'",
+        "'#{scrobble.scrobbled_at}'",
       ]
 
       inserts << "INSERT INTO #{table} (#{columns.join(', ')}) VALUES (#{values.join(', ')})"
