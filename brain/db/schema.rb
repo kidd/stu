@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140612120527) do
+ActiveRecord::Schema.define(version: 20140613093336) do
 
   create_table "scrobbles", force: true do |t|
     t.string   "user"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 20140612120527) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "genre"
   end
 
 end
