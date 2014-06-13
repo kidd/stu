@@ -64,7 +64,7 @@ post '/upload' do
 
   if params[:lastfm_user]
     lastfm_user = params[:lastfm_user]
-    scrobbles = Lastfm.scrobble(lastfm_user, from_date, to_date)
+    scrobbles, _ = Lastfm.scrobble(lastfm_user, from_date, to_date)
   end
 
   response = mix_n_match(lastfm_user, datapoints, scrobbles)
