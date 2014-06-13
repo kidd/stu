@@ -10,10 +10,14 @@ class TrackDataWorker
     }
     uri.query = URI.encode_www_form(params)
     res       = Net::HTTP.get_response(uri)
-    info = Hash.from_xml(res.body)["metadata"]
+    info      = Hash.from_xml(res.body)["metadata"]
 
-    length = info["recording"]["length"]
-    artist = info["recording"]["artist_credit"]["name"]
-    genre  = info["recording"]["tag_list"]["tag"]["name"]
+    # length = info["recording"]["length"]
+    # artist = info["recording"]["artist_credit"]["name"]
+    # genre  = info["recording"]["tag_list"]["tag"]["name"]
+
+    # track.update_attributes(
+    #   genre: genre,
+    # )
   end
 end
