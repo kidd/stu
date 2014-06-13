@@ -6,46 +6,40 @@ require 'sinatra'
 require 'workers/cruncher'
 require 'workers/lastfm'
 require 'pry'
+require 'net/http'
 
 include FileUtils::Verbose
 
 # datapoint [timestamp, [lat,long]]
 # scrobble [timestamp, {song}, artist, mbid]
 helpers do
-  def mix_n_match(datapoints, scrobbles)
-    buckets =  {}
-    scrobbles.each do |sc|
-      datapoints.inject([]) do |acc, x|
+  def mix_n_match(user_name, datapoints, scrobbles)
+
+    current_datapoint = 0
+    scrobbles.map do |sc|
+      datapoints.inject({}) do |acc, x|
         if sc.first.to_i >= x.first.to_i
-          binding.pry
-          unless buckets[sc.first.to_i]
-            buckets[sc.first.to_i] = {
+          unless acc[x.first.to_i]
+            acc[x.first.to_i] = {
               lon: x[1][0],
               lat: x[1][1],
-              user: 'toni',
+              user: user_name,
               tracks: [
                 {
-                  name: sc[1],
-                  mbid: sc[0][1],
+                  name: sc[2],
+                  mbid: sc[3],
                 }
               ]
             }
-
+            break acc
           else
-            buckets[sc.first.to_i][:tracks] << { name: sc[1], mbid: sc[0][1] }  # sc[1] is name, sc[0][1] is artist mbid. change to songmbid
+            acc[x.first.to_i][:tracks] << { name: sc[2], mbid: sc[3] }  # sc[1] is name, sc[0][1] is artist mbid. change to songmbid
+            break acc
           end
         end
+        acc
       end
     end
-    #   bucket =  data_buckets.select{|db| sc.first.to_i >= db.to_i }.first
-
-    #   if buckets[hora]
-    #     buckets[hora] << sc
-    #   else
-    #     buckets[hora] =  [sc]
-    #   end
-    # end
-    data_buckets
   end
 end
 
@@ -69,7 +63,17 @@ post '/upload' do
     scrobbles = Lastfm.scrobble(lastfm_user, from_date, to_date)
   end
 
-  response = mix_n_match(datapoints, scrobbles)
+  response = mix_n_match(lastfm_user, datapoints, scrobbles)
+
+  uri    = URI("http://localhost:3000/buckets ")
+  response.each do |k, v|
+    v['timestamp'] = k
+    response = Net::HTTP.post_form(uri, v)
+  end
+
+
+  #uri    = URI("https://372c006e-4a0166229897.my.apitools.com/sql ")
+  # params = { q: inserts.join('; ') }
 end
 
 
