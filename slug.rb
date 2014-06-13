@@ -63,14 +63,15 @@ post '/upload' do
     scrobbles = Lastfm.scrobble(lastfm_user, from_date, to_date)
   end
 
-  response = mix_n_match(lastfm_user, datapoints, scrobbles)
+  response = mix_n_match(lastfm_user, datapoints, scrobbles).first
 
   uri    = URI("http://localhost:3000/buckets ")
   response.each do |k, v|
     v['timestamp'] = k
-    response = Net::HTTP.post_form(uri, v)
+    response = Net::HTTP.post_form(uri, {'bucket' =>  v.to_json} )
   end
 
+  "DONE!"
 
   #uri    = URI("https://372c006e-4a0166229897.my.apitools.com/sql ")
   # params = { q: inserts.join('; ') }

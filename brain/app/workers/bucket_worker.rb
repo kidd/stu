@@ -1,3 +1,4 @@
+require 'pry'
 class BucketWorker
   include Sidekiq::Worker
 
@@ -27,5 +28,3 @@ class BucketWorker
     end
   end
 end
-
-
