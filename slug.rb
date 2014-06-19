@@ -47,6 +47,12 @@ helpers do
   end
 end
 
+get '/download' do
+  @start_time = (Time.now - (3 * 30 * 24 * 60 * 60)).to_i # 3 months ago
+  @end_time   = Time.now.to_i
+  erb :download
+end
+
 get '/upload' do
     erb :upload
 end
@@ -89,6 +95,12 @@ end
 
 
 __END__
+@@download
+<html>
+  <body>
+  <a href='<%= "https://maps.google.com/locationhistory/b/0/kml?startTime=#{@start_time}&endTime=#{@end_time}" %>'>download location history</a>
+  </body>
+</html>
 @@upload
 <html>
   <body>
